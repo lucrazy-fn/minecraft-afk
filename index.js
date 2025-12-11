@@ -10,52 +10,33 @@ function startBot() {
 
   const password = "trocar123"
 
-  // Login automático
-  bot.on('message', msg => {
-    const t = msg.toString().toLowerCase()
-    if (t.includes("/login")) {
+  bot.once('login', () => {
+    console.log("Bot conectou ao Kowamc, tentando logar...")
+  })
+
+  // LOGIN AUTOMÁTICO SPAM (10 segundos)
+  bot.on('spawn', () => {
+    console.log("Spawn detectado, iniciando spam de login...")
+    let attempts = 0
+    const interval = setInterval(() => {
       bot.chat(`/login ${password}`)
-      console.log("🔐 Logando...")
-    }
+      attempts++
+      if (attempts >= 20) clearInterval(interval)
+    }, 500)
   })
 
-  // Quando o bot spawna
-  bot.once('spawn', () => {
-    console.log("🧭 Spawnou! Clicando a bússola...")
-    setTimeout(() => bot.activateItem(), 2000) // botão direito
-
-    // Depois abrir o menu e clicar no SMP
-    setTimeout(clickSMP, 4000)
+  // DEBUG: ver mensagens do servidor
+  bot.on('message', msg => {
+    console.log("Servidor:", msg.toString())
   })
-
-  function clickSMP() {
-    const win = bot.currentWindow
-    if (!win) {
-      console.log("❌ Menu não abriu, tentando de novo...")
-      return setTimeout(clickSMP, 1500)
-    }
-
-    // Procura item "Muda de Carvalho" (oak sapling)
-    const sapling = win.slots.find(
-      slot =>
-        slot &&
-        (slot.name.includes("sapling") ||
-         slot.displayName?.toLowerCase().includes("carvalho") ||
-         slot.displayName?.toLowerCase().includes("smp"))
-    )
-
-    if (!sapling) {
-      console.log("❌ Muda de Carvalho não encontrada, tentando...")
-      return setTimeout(clickSMP, 1500)
-    }
-
-    console.log("🌱 Clicando para entrar no SMP...")
-    bot.simpleClick.leftMouse(sapling.slot)
-  }
 
   bot.on('end', () => {
     console.log("Bot caiu, reconectando em 5s...")
     setTimeout(startBot, 5000)
+  })
+
+  bot.on('error', err => {
+    console.log("Erro:", err)
   })
 }
 
