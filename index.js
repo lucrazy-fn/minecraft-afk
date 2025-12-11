@@ -8,21 +8,26 @@ function startBot() {
     version: false
   })
 
-  const password = "trocar123" // sua senha fixa
+  const password = "trocar123"
 
   bot.once('login', () => {
-    console.log("Bot entrou no Kowamc!")
+    console.log("Bot conectou ao Kowamc, tentando logar...")
   })
 
-  // Detecta mensagem do servidor e faz login automático
-  bot.on('message', msg => {
-    const text = msg.toString().toLowerCase()
-    console.log("Servidor:", text)
-
-    if (text.includes("/login") || text.includes("logar") || text.includes("login")) {
+  // LOGIN AUTOMÁTICO SPAM (10 segundos)
+  bot.on('spawn', () => {
+    console.log("Spawn detectado, iniciando spam de login...")
+    let attempts = 0
+    const interval = setInterval(() => {
       bot.chat(`/login ${password}`)
-      console.log("🔑 Logando...")
-    }
+      attempts++
+      if (attempts >= 20) clearInterval(interval)
+    }, 500)
+  })
+
+  // DEBUG: ver mensagens do servidor
+  bot.on('message', msg => {
+    console.log("Servidor:", msg.toString())
   })
 
   bot.on('end', () => {
