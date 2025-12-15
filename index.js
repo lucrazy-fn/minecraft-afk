@@ -11,61 +11,59 @@ function startBot() {
   const password = "trocar123"
   let logged = false
 
-  // Login com spam (única forma de entrar no Kowamc cracked)
   bot.on('spawn', () => {
-    console.log("Spawn detectado, iniciando spam de login...")
-    let attempts = 0
+    console.log("Spawn detectado, iniciando login...")
 
-    const interval = setInterval(() => {
-      if (logged) return clearInterval(interval)
+    // spam de login
+    let tries = 0
+    const loginInterval = setInterval(() => {
+      if (logged) return clearInterval(loginInterval)
       bot.chat(`/login ${password}`)
-      attempts++
-      if (attempts >= 25) clearInterval(interval)
+      tries++
+      if (tries >= 20) clearInterval(loginInterval)
     }, 400)
-
-    setTimeout(() => tryOpenCompass(), 6000)
   })
 
-  // Detecta mensagem do servidor
   bot.on('message', msg => {
     const text = msg.toString().toLowerCase()
     console.log("Servidor:", text)
 
-    if (text.includes("logado") || text.includes("sucesso") || text.includes("bem vindo")) {
+    if (
+      text.includes("logado") ||
+      text.includes("sucesso") ||
+      text.includes("bem vindo")
+    ) {
+      if (logged) return
       logged = true
-      console.log("✔ Logado com sucesso!")
-      setTimeout(() => tryOpenCompass(), 2000)
+
+      console.log("✔ Logado! Indo até o NPC do SMP...")
+
+      setTimeout(irProNPC, 3000)
     }
   })
 
-  // Clica a bússola (botão direito)
-  function tryOpenCompass() {
-    console.log("🧭 Clicando a bússola...")
-    bot.activateItem()
-    setTimeout(clickSMP, 3500)
-  }
+  function irProNPC() {
+  console.log("Indo até o NPC (sem virar a câmera)")
 
-  // Acha e clica o oak_sapling
-  function clickSMP() {
-    const win = bot.currentWindow
-    if (!win) {
-      console.log("❌ Menu não abriu, tentando de novo...")
-      return setTimeout(clickSMP, 1000)
-    }
+  // ANDAR PRA FRENTE 3.36s (W)
+  bot.setControlState('forward', true)
+  setTimeout(() => {
+    bot.setControlState('forward', false)
 
-    const smpItem = win.slots.find(slot =>
-      slot &&
-      slot.name === "oak_sapling"  // <<< GARANTIDO
-    )
+    // ANDAR PRA DIREITA 1.75s (D)
+    bot.setControlState('right', true)
+    setTimeout(() => {
+      bot.setControlState('right', false)
 
-    if (!smpItem) {
-      console.log("❌ SMP (oak_sapling) não encontrado, tentando novamente...")
-      return setTimeout(clickSMP, 1000)
-    }
+      // CLIQUE DIREITO
+      console.log("Clicando no NPC...")
+      bot.activateEntity(bot.nearestEntity())
 
-    console.log("🌱 SMP encontrado! Clicando para entrar...")
-    bot.simpleClick.leftMouse(smpItem.slot)
-  }
+    }, 1750)
+
+  }, 3360)
+}
+
 
   bot.on('end', () => {
     console.log("Bot caiu, reconectando em 5s...")
