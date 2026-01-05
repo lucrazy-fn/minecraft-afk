@@ -12,7 +12,13 @@ const CONTAS = [
   "krigrj",
   "LosPepittos",
   "bebedupzao",
-  "bayernkklego"
+  "bayernkklego",
+  "qQ199_",
+  "xantagos",
+  "puredeervilha",
+  "juliokieto_",
+  "manoeusoulegal",
+  "ilovedrdon"
 ]
 
 function criarBot(username) {
