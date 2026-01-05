@@ -1,76 +1,67 @@
 const mineflayer = require('mineflayer')
 
-function startBot() {
+const SERVER = "jogar.heavensmp.xyz"
+const PORT = 25565
+const PASSWORD = "LuanzinXD"
+
+const CONTAS = [
+  "LuanzinRtx",
+  "101br",
+  "102us",
+  "mamypepo",
+  "krigrj",
+  "LosPepittos"
+]
+
+function criarBot(username) {
   const bot = mineflayer.createBot({
-    host: "kowamc.com",
-    port: 25565,
-    username: "LuanzinRtx",
+    host: SERVER,
+    port: PORT,
+    username: username,
     version: false
   })
 
-  const password = "trocar123"
-  let logged = false
+  let logado = false
 
   bot.on('spawn', () => {
-    console.log("Spawn detectado, iniciando login...")
+    console.log(`[${username}] Spawnou, tentando login...`)
 
-    // spam de login
-    let tries = 0
-    const loginInterval = setInterval(() => {
-      if (logged) return clearInterval(loginInterval)
-      bot.chat(`/login ${password}`)
-      tries++
-      if (tries >= 20) clearInterval(loginInterval)
-    }, 400)
+    let tentativas = 0
+    const interval = setInterval(() => {
+      if (logado) return clearInterval(interval)
+      bot.chat(`/login ${PASSWORD}`)
+      tentativas++
+      if (tentativas >= 15) clearInterval(interval)
+    }, 500)
   })
 
   bot.on('message', msg => {
-    const text = msg.toString().toLowerCase()
-    console.log("Servidor:", text)
+    const texto = msg.toString().toLowerCase()
 
     if (
-      text.includes("logado") ||
-      text.includes("sucesso") ||
-      text.includes("bem vindo")
+      texto.includes("logado") ||
+      texto.includes("sucesso") ||
+      texto.includes("bem vindo")
     ) {
-      if (logged) return
-      logged = true
-
-      console.log("✔ Logado! Indo até o NPC do SMP...")
-
-      setTimeout(irProNPC, 3000)
+      if (logado) return
+      logado = true
+      console.log(`[${username}] ✔ Logado e AFK`)
     }
   })
 
-  function irProNPC() {
-  console.log("Indo até o NPC (sem virar a câmera)")
-
-  // ANDAR PRA FRENTE 3.36s (W)
-  bot.setControlState('forward', true)
-  setTimeout(() => {
-    bot.setControlState('forward', false)
-
-    // ANDAR PRA DIREITA 1.75s (D)
-    bot.setControlState('right', true)
-    setTimeout(() => {
-      bot.setControlState('right', false)
-
-      // CLIQUE DIREITO
-      console.log("Clicando no NPC...")
-      bot.activateEntity(bot.nearestEntity())
-
-    }, 1750)
-
-  }, 3360)
-}
-
-
   bot.on('end', () => {
-    console.log("Bot caiu, reconectando em 5s...")
-    setTimeout(startBot, 5000)
+    console.log(`[${username}] Caiu, reconectando em 5s...`)
+    setTimeout(() => criarBot(username), 5000)
   })
 
-  bot.on('error', err => console.log("Erro:", err))
+  bot.on('error', err => {
+    console.log(`[${username}] Erro:`, err.message)
+  })
 }
 
-startBot()
+// cria os bots com delay (pra não cair tudo de uma vez)
+CONTAS.forEach((nick, i) => {
+  setTimeout(() => {
+    criarBot(nick)
+  }, i * 4000)
+})
