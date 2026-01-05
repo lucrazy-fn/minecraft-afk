@@ -1,8 +1,8 @@
 {
-  "name": "bot-afk-kowamc",
+  "name": "heaven-afk-bots",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "mineflayer": "^4.11.0"
+    "mineflayer": "^4.16.0"
   }
 }
