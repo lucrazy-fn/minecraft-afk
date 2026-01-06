@@ -9,7 +9,6 @@ const CONTAS = [
   "101br",
   "102us",
   "mamypepo",
-  "krigrj",
   "LosPepittos",
   "bebedupzao",
   "bayernkklego",
