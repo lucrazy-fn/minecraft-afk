@@ -18,7 +18,10 @@ const CONTAS = [
   "juliokieto_",
   "manoeusoulegal",
   "ilovedrdon",
-  "krigrj"
+  "krigrj",
+  "OhMypeec",
+  "NyceTriy",
+  "Bubupidao"
 ]
 
 function criarBot(username) {
