@@ -1,27 +1,12 @@
 const mineflayer = require('mineflayer')
 
-const SERVER = "jogar.heavensmp.xyz"
+const SERVER = "Servidor.Desejado"
 const PORT = 25565
-const PASSWORD = "LuanzinXD"
+const PASSWORD = "SuaSenha"
 
 const CONTAS = [
-  "LuanzinRtx",
-  "101br",
-  "102us",
-  "mamypepo",
-  "LosPepittos",
-  "bebedupzao",
-  "bayernkklego",
-  "qQ199_",
-  "xantagos",
-  "puredeervilha",
-  "juliokieto_",
-  "manoeusoulegal",
-  "ilovedrdon",
-  "krigrj",
-  "OhMypeec",
-  "NyceTriy",
-  "Bubupidao"
+  "Conta1",
+  "Conta2"
 ]
 
 function criarBot(username) {
@@ -70,7 +55,6 @@ function criarBot(username) {
   })
 }
 
-// cria os bots com delay (pra não cair tudo de uma vez)
 CONTAS.forEach((nick, i) => {
   setTimeout(() => {
     criarBot(nick)
